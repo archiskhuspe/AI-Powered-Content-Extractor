@@ -44,39 +44,46 @@ public class SummarizationService {
 
     // --- HuggingFace Inference API summarization ---
     private Map<String, Object> summarizeWithHuggingFace(String text, String apiKey) throws IOException {
-        // --- Chunked summarization logic ---
-        List<String> chunks = splitTextIntoChunks(text, 1000, 3); // up to 3 chunks of ~1000 chars
-        List<String> chunkSummaries = new ArrayList<>();
-        for (String chunk : chunks) {
+    System.out.println("Starting HuggingFace summarisation...");
+    List<String> chunks = splitTextIntoChunks(text, 1000, 3);
+    List<String> chunkSummaries = new ArrayList<>();
+    for (String chunk : chunks) {
+        try {
+            System.out.println("Preparing payload for chunk...");
             String payload = "{\"inputs\": " + escapeJson(chunk) + "}";
             URL url = new URL("https://api-inference.huggingface.co/models/facebook/bart-large-cnn");
+            System.out.println("Opening connection...");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + apiKey);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
+            System.out.println("Sending request...");
             conn.getOutputStream().write(payload.getBytes());
             int code = conn.getResponseCode();
+            System.out.println("HuggingFace API response code: " + code);
             if (code == 200) {
                 String response = new String(conn.getInputStream().readAllBytes());
                 String summaryText = extractSummaryFromHfResponse(response);
                 if (summaryText != null && !summaryText.isBlank()) {
                     chunkSummaries.add(summaryText.trim());
                 }
+            } else {
+                System.out.println("Non-200 response from HuggingFace: " + code);
             }
-            // else skip this chunk on error
+        } catch (Exception ex) {
+            System.out.println("Exception during HuggingFace API call: " + ex.getMessage());
+            ex.printStackTrace();
         }
-        if (!chunkSummaries.isEmpty()) {
-            // Join chunk summaries as paragraphs
-            String summary = String.join("\n\n", chunkSummaries).trim();
-            // Optionally split into max 3 paragraphs for display
-            summary = splitIntoParagraphs(summary, 3);
-            // Extract key points from the summary itself
-            List<String> keyPoints = extractKeyPointsFromSummary(summary, 7);
-            return Map.of("summary", summary, "keyPoints", keyPoints);
-        }
-        return null;
     }
+    if (!chunkSummaries.isEmpty()) {
+        String summary = String.join("\n\n", chunkSummaries).trim();
+        summary = splitIntoParagraphs(summary, 3);
+        List<String> keyPoints = extractKeyPointsFromSummary(summary, 7);
+        return Map.of("summary", summary, "keyPoints", keyPoints);
+    }
+    return null;
+}
 
     // Helper: Escape JSON string
     private String escapeJson(String s) {
