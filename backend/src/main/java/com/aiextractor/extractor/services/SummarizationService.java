@@ -64,6 +64,7 @@ public class SummarizationService {
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Authorization", "Bearer " + apiKey);
                 conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
                 conn.setDoOutput(true);
                 System.out.println("Sending request...");
                 conn.getOutputStream().write(payload.getBytes());
