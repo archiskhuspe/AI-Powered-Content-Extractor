@@ -44,14 +44,16 @@ public class SummarizationService {
 
     // --- HuggingFace Inference API summarization ---
     private Map<String, Object> summarizeWithHuggingFace(String text, String apiKey) throws IOException {
-    System.out.println("Starting HuggingFace summarisation...");
-    List<String> chunks = splitTextIntoChunks(text, 1000, 3);
-    List<String> chunkSummaries = new ArrayList<>();
-    for (String chunk : chunks) {
+        // --- Chunked summarization logic ---
+        List<String> chunks = splitTextIntoChunks(text, 500, 3); // Reduce chunk size to 500 chars
+        List<String> chunkSummaries = new ArrayList<>();
+        for (String chunk : chunks) {
             try {
-                // Ensure chunk is no more than 1000 characters
-                if (chunk.length() > 1000) {
-                    chunk = chunk.substring(0, 1000);
+                // Remove non-ASCII characters (optional, for safety)
+                chunk = chunk.replaceAll("[^\\x00-\\x7F]", "");
+                // Ensure chunk is no more than 500 characters
+                if (chunk.length() > 500) {
+                    chunk = chunk.substring(0, 500);
                 }
                 System.out.println("Preparing payload for chunk...");
                 String payload = "{\"inputs\": " + escapeJson(chunk) + "}";
@@ -74,6 +76,8 @@ public class SummarizationService {
                         chunkSummaries.add(summaryText.trim());
                     }
                 } else {
+                    String errorResponse = new String(conn.getErrorStream().readAllBytes());
+                    System.out.println("HuggingFace error response: " + errorResponse);
                     System.out.println("Non-200 response from HuggingFace: " + code);
                 }
             } catch (Exception ex) {
