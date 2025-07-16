@@ -51,6 +51,7 @@ public class SummarizationService {
         try {
             System.out.println("Preparing payload for chunk...");
             String payload = "{\"inputs\": " + escapeJson(chunk) + "}";
+            System.out.println("Payload: " + payload);
             URL url = new URL("https://api-inference.huggingface.co/models/facebook/bart-large-cnn");
             System.out.println("Opening connection...");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
