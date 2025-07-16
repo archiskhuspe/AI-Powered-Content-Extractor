@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/extract",
+      "destination": "http://localhost:8080/api/extract"
+    }
+  ]
+}
