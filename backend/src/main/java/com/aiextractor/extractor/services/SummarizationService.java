@@ -35,6 +35,7 @@ public class SummarizationService {
                 if (hfResult != null) return hfResult;
             } catch (Exception e) {
                 System.out.println("HuggingFace API failed, falling back to local summariser: " + e.getMessage());
+                e.printStackTrace();
             }
         }
         System.out.println("Falling back to local summariser");
