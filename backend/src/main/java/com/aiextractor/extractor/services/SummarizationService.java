@@ -48,35 +48,39 @@ public class SummarizationService {
     List<String> chunks = splitTextIntoChunks(text, 1000, 3);
     List<String> chunkSummaries = new ArrayList<>();
     for (String chunk : chunks) {
-        try {
-            System.out.println("Preparing payload for chunk...");
-            String payload = "{\"inputs\": " + escapeJson(chunk) + "}";
-            System.out.println("Payload: " + payload);
-            URL url = new URL("https://api-inference.huggingface.co/models/facebook/bart-large-cnn");
-            System.out.println("Opening connection...");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + apiKey);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-            System.out.println("Sending request...");
-            conn.getOutputStream().write(payload.getBytes());
-            int code = conn.getResponseCode();
-            System.out.println("HuggingFace API response code: " + code);
-            if (code == 200) {
-                String response = new String(conn.getInputStream().readAllBytes());
-                String summaryText = extractSummaryFromHfResponse(response);
-                if (summaryText != null && !summaryText.isBlank()) {
-                    chunkSummaries.add(summaryText.trim());
+            try {
+                // Ensure chunk is no more than 1000 characters
+                if (chunk.length() > 1000) {
+                    chunk = chunk.substring(0, 1000);
                 }
-            } else {
-                System.out.println("Non-200 response from HuggingFace: " + code);
+                System.out.println("Preparing payload for chunk...");
+                String payload = "{\"inputs\": " + escapeJson(chunk) + "}";
+                System.out.println("Payload: " + payload);
+                URL url = new URL("https://api-inference.huggingface.co/models/facebook/bart-large-cnn");
+                System.out.println("Opening connection...");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Authorization", "Bearer " + apiKey);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+                System.out.println("Sending request...");
+                conn.getOutputStream().write(payload.getBytes());
+                int code = conn.getResponseCode();
+                System.out.println("HuggingFace API response code: " + code);
+                if (code == 200) {
+                    String response = new String(conn.getInputStream().readAllBytes());
+                    String summaryText = extractSummaryFromHfResponse(response);
+                    if (summaryText != null && !summaryText.isBlank()) {
+                        chunkSummaries.add(summaryText.trim());
+                    }
+                } else {
+                    System.out.println("Non-200 response from HuggingFace: " + code);
+                }
+            } catch (Exception ex) {
+                System.out.println("Exception during HuggingFace API call: " + ex.getMessage());
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            System.out.println("Exception during HuggingFace API call: " + ex.getMessage());
-            ex.printStackTrace();
         }
-    }
     if (!chunkSummaries.isEmpty()) {
         String summary = String.join("\n\n", chunkSummaries).trim();
         summary = splitIntoParagraphs(summary, 3);
