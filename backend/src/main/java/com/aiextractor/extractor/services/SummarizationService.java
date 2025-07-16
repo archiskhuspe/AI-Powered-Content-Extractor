@@ -30,13 +30,14 @@ public class SummarizationService {
         String apiKey = System.getenv("HUGGINGFACE_API_KEY");
         if (apiKey != null && !apiKey.isBlank()) {
             try {
+                System.out.println("Using HuggingFace API for summarisation");
                 Map<String, Object> hfResult = summarizeWithHuggingFace(text, apiKey);
                 if (hfResult != null) return hfResult;
             } catch (Exception e) {
-                // Fallback to local summarizer
+                System.out.println("HuggingFace API failed, falling back to local summariser: " + e.getMessage());
             }
         }
-        // Fallback: frequency-based summarizer
+        System.out.println("Falling back to local summariser");
         return summarizeLocally(text, Math.max(numSentences, 10));
     }
 
