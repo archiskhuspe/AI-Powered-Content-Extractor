@@ -7,11 +7,11 @@ A full-stack web app to extract, summarize, and display key points from any publ
 ## ✨ Features
 - Extracts main content from any public URL (removes nav/footer/ads, prefers main/article/largest/div)
 - Summarizes content using open-source NLP (local or HuggingFace Inference API)
-- Produces a 2–3 paragraph summary and up to 7 key points
+- Produces a 2–3 paragraph summary and key points based on the summary
 - Notion-style editable/searchable key points table
 - Inline editing and deletion of key points (with animation)
 - Search with highlight and instant filtering
-- Pagination for large lists of key points (5 per page)
+- Pagination for large lists of key points
 - Export summary and key points as PDF (jsPDF)
 - Modern, responsive UI (Tailwind CSS + shadcn/ui)
 - Loading spinners, skeletons, and error toasts
@@ -127,9 +127,9 @@ A full-stack web app to extract, summarize, and display key points from any publ
 
 ```mermaid
 flowchart LR
-    User-->|Browser|Vercel(Frontend: Next.js)
-    Vercel-->|API Calls|Render(Backend: Spring Boot)
-    Render-->|Internet|External URLs
+    User["User (Browser)"] --> Vercel["Frontend: Vercel (Next.js)"]
+    Vercel --> Backend["Backend: Render (Spring Boot)"]
+    Backend -->|Fetches| External["External URLs"]
 ```
 
 ---
