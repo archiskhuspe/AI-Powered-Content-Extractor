@@ -27,7 +27,7 @@ A full-stack web app to extract, summarize, and display key points from any publ
 ![Screenshot](./frontend/screenshots/image2.png)
 
 ### Key Points Search Functionality
-![Screenshot](.frontend/screenshots/image3.png)
+![Screenshot](./frontend/screenshots/image3.png)
 
 ### Key Points Edit Functionality
 ![Screenshot](./frontend/screenshots/image4.png)
