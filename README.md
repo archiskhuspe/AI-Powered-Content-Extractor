@@ -18,6 +18,20 @@ A full-stack web app to extract, summarize, and display key points from any publ
 - Fully tested (Jest, Testing Library, Maven)
 - Vercel-deployable frontend, cloud-ready backend
 
+## 🖼️ Screenshots
+
+### Summary Extraction with PDF Export
+![Screenshot](./frontend/screenshots/image1.png)
+
+### Key Points Table
+![Screenshot](./frontend/screenshots/image2.png)
+
+### Key Points Search Functionality
+![Screenshot](.frontend/screenshots/image3.png)
+
+### Key Points Edit Functionality
+![Screenshot](./frontend/screenshots/image4.png)
+
 ---
 
 ## 🛠️ Setup & Deployment
