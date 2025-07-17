@@ -7,15 +7,14 @@ A full-stack web app to extract, summarize, and display key points from any publ
 ## ✨ Features
 - Extracts main content from any public URL (removes nav/footer/ads, prefers main/article/largest/div)
 - Summarizes content using open-source NLP (local or HuggingFace Inference API)
-- Produces a 2–3 paragraph summary and key points based on the summary
+- Produces a 2–3 paragraph summary and up to 7 key points
 - Notion-style editable/searchable key points table
-- Inline editing and deletion of key points
+- Inline editing and deletion of key points (with animation)
 - Search with highlight and instant filtering
-- Pagination for large lists of key points
+- Pagination for large lists of key points (5 per page)
 - Export summary and key points as PDF (jsPDF)
 - Modern, responsive UI (Tailwind CSS + shadcn/ui)
-- Loading spinners, skeletons, and error alerts
-- Toast notifications for actions and errors
+- Loading spinners, skeletons, and error toasts
 - Fully tested (Jest, Testing Library, Maven)
 - Vercel-deployable frontend, cloud-ready backend
 
@@ -78,34 +77,11 @@ A full-stack web app to extract, summarize, and display key points from any publ
 
 ---
 
-## 🖼️ Screenshots
-> _Add screenshots of the app here (summary, key points table, PDF export, mobile view, etc.)_
-
----
-
-## 🧪 Testing
-
-### Backend
-- Run all backend tests:
-  ```sh
-  cd backend
-  mvn test
-  ```
-
-### Frontend
-- Run all frontend tests:
-  ```sh
-  cd frontend
-  npm run test
-  ```
-- Example tests are provided in `frontend/__tests__/App.test.jsx` and cover both error and success cases for the main UI.
-
----
-
-## 🤖 Example API Usage
+## 🤖 API Usage
 - **POST** `/api/extract`
-  - Body: `{ "url": "https://example.com" }`
-  - Response: `{ "summary": "...", "keyPoints": ["...", ...] }`
+  - **Request Body:** `{ "url": "https://example.com" }`
+  - **Response:** `{ "summary": "...", "keyPoints": ["...", ...] }`
+  - **Errors:** Returns `{ "error": "..." }` for invalid URLs, fetch failures, or unexpected errors.
 
 ---
 
@@ -125,6 +101,25 @@ A full-stack web app to extract, summarize, and display key points from any publ
 
 - **backend/**: Java Spring Boot REST API for extracting and summarizing content from public URLs.
 - **frontend/**: Next.js app for submitting URLs and displaying extracted summaries and key points in a Notion-style table.
+
+---
+
+## 🧪 Testing
+
+### Backend
+- Run all backend tests:
+  ```sh
+  cd backend
+  mvn test
+  ```
+
+### Frontend
+- Run all frontend tests:
+  ```sh
+  cd frontend
+  npm run test
+  ```
+- Example tests are provided in `frontend/__tests__/App.test.jsx` and cover both error and success cases for the main UI.
 
 ---
 
