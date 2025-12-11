@@ -1,4 +1,4 @@
-# Extractly: AI-powered Content Extractor
+# AI-powered Content Extractor
 
 A full-stack web app to extract, summarize, and display key points from any public URL using open-source NLP. Built with Java Spring Boot (backend), React.js + Next.js (frontend), Tailwind CSS, and shadcn/ui for a modern Notion-like UI. Features PDF export, inline editing, search, pagination, and more.
 
